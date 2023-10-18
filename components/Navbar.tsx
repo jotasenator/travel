@@ -1,27 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NAV_LINKS } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
 
-type ImageConstructor = new () => HTMLImageElement;
-
-const preloadImages = (imagePaths: string[]) => {
-  const Image: ImageConstructor = window.Image;
-  imagePaths.forEach((path) => {
-    const img = new Image();
-    img.src = path;
-  });
-};
-
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const imagePaths = ["/close.png", "/menu.svg"];
-  useEffect(() => {
-    preloadImages(imagePaths);
-  }, []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   return (
