@@ -1,12 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NAV_LINKS } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
 
+type ImageConstructor = new () => HTMLImageElement;
+
+const preloadImages = (imagePaths: string[]) => {
+  const Image: ImageConstructor = window.Image;
+  imagePaths.forEach((path) => {
+    const img = new Image();
+    img.src = path;
+  });
+};
+
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const imagePaths = ["/close.png", "/menu.svg"];
+  useEffect(() => {
+    preloadImages(imagePaths);
+  }, []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   return (
@@ -58,12 +73,15 @@ const Navbar = () => {
       </div>
 
       <Image
-        src="menu.svg"
-        alt="menu"
+        src={`${isMobileMenuOpen ? "/close.png" : "/menu.svg"}`}
+        alt={`${isMobileMenuOpen ? "close" : "menu"}`}
+        // key needed
+        key={`${isMobileMenuOpen ? "close" : "menu"}`}
         width={32}
         height={32}
         className="inline-block cursor-pointer lg:hidden z-50"
         onClick={toggleMobileMenu}
+        priority={true}
       />
     </nav>
   );
